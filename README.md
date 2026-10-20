@@ -42,6 +42,26 @@ machine learning can add, evaluated on people it has never seen.
 Not "AI detects stress and exercise with high accuracy", but an honest account of what a wrist wearable can and
 cannot see.
 
+## What this project does differently
+
+The dataset's original paper (Hongn et al., 2025) trained XGBoost classifiers and reported 93% (stress vs rest),
+91% (aerobic vs sprints) and 84% (four classes) accuracy, using 10-fold cross-validation over segments after an 80/20
+split. This project asks a different question, *what does the wearable actually measure, and does it hold up in new
+people?*, and changes the method at every step:
+
+| Topic | Typical approach / original paper | This project |
+|---|---|---|
+| **Validation** | 10-fold CV over segments; no participant grouping reported | **Leave-one-subject-out**. A side-by-side test shows a window-level split inflates macro-F1 from **0.66 to 0.83** |
+| **Wrist heart rate** | Empatica HR used as delivered | **Per-window quality control, blind to expected results**: PPG spectral quality, agreement between HR estimates, **cadence lock-in** detected from the prescribed rpm + accelerometer. Filtering *reveals* the stress HR effect that raw HR hides (+2.2 → +5.0 bpm) |
+| **Data integrity** | 10 known issues listed | **25 issues, 15 new**: temperature fault codes, a stuck ACC axis, a session without PPG, 13 tags vs 12 in the diagram, tags out of order, group-session timing, **no resting baseline in any exercise session** |
+| **Movement vs physiology** | All features pooled | **Modality ablation**, a **stress-vs-seated-rest** test where movement cannot help (physiology alone 0.65), and discovery of a **sensor-failure shortcut** (PPG failure during sprints) |
+| **Unit of analysis** | Segments/windows as independent samples | **Participants**: paired effects with bootstrap CIs, mixed models, ICC, repeated-measures correlation with self-report |
+| **HRV & temperature** | IBI not used; temperature not analysed | HRV feasibility quantified and restricted to seated segments; temperature analysed (least informative signal) |
+| **Goal** | Maximise accuracy | **Physiology first**: expectations written down before results, then checked (sweating threshold, lagging HR after sprints, stillness under stress, individuality) |
+
+The accuracy figures are not directly comparable (different class definitions and metrics). The leakage
+demonstration shows how large the gap between window-level and person-level validation is on this dataset.
+
 ## Data
 
 [Wearable Device Dataset from Induced Stress and Structured Exercise Sessions](https://physionet.org/content/wearable-device-dataset/1.0.1/),

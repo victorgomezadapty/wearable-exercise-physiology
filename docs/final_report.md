@@ -65,6 +65,25 @@ reason to combine them.
 - **No resting baseline in any exercise session.** The seated reference comes from the stress day.
 - **25 data issues** catalogued, 15 of them not in the authors' constraint file (`src/data/issues.py`).
 
+## What this project does differently
+
+Compared with the dataset's original technical validation (Hongn et al., 2025: XGBoost, 10-fold cross-validation over
+segments after an 80/20 split; 93% stress vs rest, 91% aerobic vs sprints, 84% four classes; temperature not analysed;
+IBI not used):
+
+1. **Person-level validation.** Leave-one-subject-out throughout. The same model gives macro-F1 0.83 with a window-level
+   split and 0.66 on unseen people. The figures are not directly comparable to the paper's (different classes and
+   metrics), but the size of the gap is the point.
+2. **Outcome-blind quality control of wrist HR**, including cadence lock-in detection that exploits the prescribed
+   cadence and the accelerometer. It changes conclusions: the stress HR effect is only detectable after filtering.
+3. **Data audit.** 15 previously undocumented issues, corrected tag maps, and the finding that no exercise session has a
+   resting baseline.
+4. **Physiology separated from movement and from sensor failure.** Modality ablation, a seated stress-vs-rest test, and the
+   "HR missing" shortcut.
+5. **Participant-level statistics** with effect sizes, CIs, mixed models, ICC and self-report correlation, instead of
+   window-level accuracy as the main result.
+6. **Physiological interpretation checked against expectations written down in advance** (`docs/physiological_interpretation.md`).
+
 ## Limitations
 
 Small sample of healthy young adults; cohort confounded with sex, age, training status, setting and protocol version.
