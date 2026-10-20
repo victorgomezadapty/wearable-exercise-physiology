@@ -5,6 +5,7 @@ wearable (Empatica E4).**
 
 🌐 **Project page:** https://victorgomezadapty.github.io/wearable-exercise-physiology/ ·
 📓 **Kaggle notebook:** https://www.kaggle.com/code/vctorandrsgmezlpez/wearable-physiology-stress-vs-exercise ·
+🗂️ **Kaggle dataset:** https://www.kaggle.com/datasets/vctorandrsgmezlpez/wearable-stress-exercise-physiology ·
 📄 **Final report:** [docs/final_report.md](docs/final_report.md)
 
 This project connects exercise physiology, wearable technology and data science. The principle: **understand the
