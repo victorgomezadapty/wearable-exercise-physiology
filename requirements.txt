@@ -1,0 +1,15 @@
+# Phase 1 (data understanding)
+numpy>=2.0
+pandas>=2.2
+scipy>=1.13
+matplotlib>=3.9
+jupyterlab>=4.2
+nbformat>=5.10
+nbconvert>=7.16
+
+# Later phases (not used yet)
+# neurokit2        # EDA decomposition, PPG peak detection, HRV
+# scikit-learn     # GroupKFold / LOSO validation, baseline models
+# statsmodels      # mixed-effects models for repeated measures
+# pingouin         # effect sizes, repeated-measures statistics
+# shap             # model interpretation (only if classification is performed)

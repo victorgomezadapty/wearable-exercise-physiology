@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wearable Exercise Physiology</title>
+<meta name="description" content="Physiological responses to aerobic exercise, anaerobic sprints and acute stress, measured with a wrist wearable (Empatica E4). Physiology-first data science with participant-level validation.">
+<meta property="og:title" content="Wearable Exercise Physiology Analytics">
+<meta property="og:description" content="How do wrist-wearable signals differ between aerobic exercise, anaerobic sprints and acute stress, and how much of that is physiology rather than movement?">
+<meta property="og:image" content="assets/fig/04_event_locked.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M2 17h7l3-8 5 15 3-9 2 2h8' fill='none' stroke='%231f6feb' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600&family=JetBrains+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top">Wearable Physiology <span>· E4</span></a>
+    <ul>
+      <li><a href="#question">Question</a></li>
+      <li><a href="#data">Data</a></li>
+      <li><a href="#quality">Signal quality</a></li>
+      <li><a href="#findings">Physiology</a></li>
+      <li><a href="#ml">Machine learning</a></li>
+      <li><a href="#limits">Limitations</a></li>
+    </ul>
+    <button class="theme-btn" id="themeBtn" aria-label="Toggle colour theme">◐ Theme</button>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div class="eyebrow">Exercise physiology · Wearables · Data science</div>
+    <h1>What does a wrist wearable really see during stress and exercise?</h1>
+    <p class="lede">An analysis of heart rate, electrodermal activity, skin temperature and movement recorded with an
+      Empatica E4 during acute psychological stress, aerobic cycling and anaerobic sprints. Physiology comes first,
+      every result is computed per participant, and machine learning is only evaluated on people it has never seen.</p>
+    <div class="chips">
+      <span class="chip"><i class="dot str"></i>Acute stress · 36 participants</span>
+      <span class="chip"><i class="dot aer"></i>Aerobic cycling · 30</span>
+      <span class="chip"><i class="dot ana"></i>Anaerobic sprints · 31</span>
+    </div>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/victorgomezadapty/wearable-exercise-physiology">View the code on GitHub →</a>
+      <a class="btn" id="kaggleBtn" href="https://github.com/victorgomezadapty/wearable-exercise-physiology/tree/main/notebooks">Notebooks</a>
+      <a class="btn" href="#findings">Jump to findings</a>
+    </div>
+    <div class="stats">
+      <div class="stat"><b>12,346</b><span>30-s windows, quality-checked per signal</span></div>
+      <div class="stat"><b>+5 bpm</b><span>HR response to a mental-stress task, with the wrist <em>stiller</em> than at rest</span></div>
+      <div class="stat"><b>3%</b><span>of sprint windows with a usable heart rate from the wrist</span></div>
+      <div class="stat"><b>0.83 → 0.66</b><span>macro-F1 once the model is tested on unseen people</span></div>
+    </div>
+  </div>
+</header>
+
+<section id="question">
+  <div class="wrap">
+    <div class="eyebrow">The question</div>
+    <h2>Physical activity is not the same as physiological state</h2>
+    <p class="intro">An accelerometer tells us that someone is moving. Heart rate, electrodermal activity and skin
+      temperature tell us how the body is responding. The main question: <b>how do wearable physiological signals
+      differ between aerobic exercise, anaerobic exercise and acute stress?</b> A follow-up runs through the
+      whole project: how much of any difference is physiology, and how much is simply movement?</p>
+    <div class="grid-3">
+      <div class="card"><h3>Movement</h3><p>3-axis accelerometer (32 Hz). Context: pedalling rhythm, sprint bursts, stillness.</p></div>
+      <div class="card"><h3>Cardiovascular</h3><p>Wrist PPG (64 Hz) → heart rate and beat intervals: load, sympathovagal balance, HRV.</p></div>
+      <div class="card"><h3>Autonomic &amp; thermal</h3><p>Electrodermal activity (sympathetic sudomotor drive, sweating) and skin temperature (peripheral perfusion).</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="data">
+  <div class="wrap">
+    <div class="eyebrow">Data &amp; protocol</div>
+    <h2>Three protocols, mostly the same people</h2>
+    <p class="intro">PhysioNet <i>Wearable Device Dataset from Induced Stress and Structured Exercise Sessions</i>
+      (v1.0.1; Hongn et al., <i>Scientific Data</i> 2025). <b>30 participants completed all three protocols</b>, so
+      most comparisons are within the same person. Every one of the 707 files was verified against the official
+      checksums.</p>
+    <div class="grid-3">
+      <div class="card finding str"><h3>Acute stress</h3><p>Seated. Baseline → Stroop (v1) → Trier Mental Challenge Test (timed arithmetic with aversive noise) → rest → opinion, opposite opinion and serial-subtraction tasks.</p></div>
+      <div class="card finding aer"><h3>Aerobic</h3><p>Incremental stationary cycling, 60 → 110 rpm with rising resistance (individual sessions), or a 70–95 rpm group spinning class.</p></div>
+      <div class="card finding ana"><h3>Anaerobic</h3><p>Wingate-style: 3–4 all-out sprints of 30–45 s, each followed by ~4 min of unloaded pedalling.</p></div>
+    </div>
+    <figure>
+      <img src="assets/fig/01_overview_S04_stress.png" alt="Raw signals of one participant during the stress protocol" loading="lazy">
+      <figcaption><b>One participant, stress protocol.</b> HR and EDA rise during the tasks (orange) and settle during rest, while the wrist barely moves.</figcaption>
+    </figure>
+    <div class="callout"><b>What Phase 1 uncovered.</b> 25 data issues, 15 of them not listed by the authors:
+      skin-temperature fault codes (207–235 °C), a stuck accelerometer axis, a session without usable PPG, tags out of
+      order, and group-session timing differences. Also: <b>no exercise session contains a true resting baseline</b>.
+      The only seated reference is on the stress day.</div>
+  </div>
+</section>
+
+<section id="quality">
+  <div class="wrap">
+    <div class="eyebrow">Signal quality first</div>
+    <h2>Before any comparison: which windows can be trusted?</h2>
+    <p class="intro">Empatica's heart rate was often physiologically implausible during cycling: flat, erratic, or
+      locked onto the pedalling rhythm. Every 30-s window got a quality verdict per signal. The rules use <b>signal
+      properties only</b>: PPG spectral quality, agreement between independent HR estimates, and cadence lock-in
+      detected with the accelerometer. They never use the expected result.</p>
+    <figure>
+      <img src="assets/fig/02_ppg_examples.png" alt="Clean and corrupted PPG examples with spectra" loading="lazy">
+      <figcaption><b>Same participant, three moments.</b> Seated, the PPG has one clean spectral peak at the heart rate. During a sprint the optical signal is swamped by grip and forearm forces.</figcaption>
+    </figure>
+    <div class="grid-2">
+      <figure>
+        <img src="assets/fig/02_hr_validity_by_state.png" alt="Share of valid HR windows by state" loading="lazy">
+        <figcaption><b>Usable HR:</b> ~60–67% of seated windows, 43% of aerobic stages, <b>3% of sprints</b>.</figcaption>
+      </figure>
+      <figure>
+        <img src="assets/fig/02_hr_staircase_filtered.png" alt="Aerobic HR staircase before and after quality filtering" loading="lazy">
+        <figcaption><b>Independent check:</b> quality filtering, blind to the expected result, sharpens the incremental HR staircase (median ρ 0.87 → 0.95).</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section id="findings">
+  <div class="wrap">
+    <div class="eyebrow">Physiology</div>
+    <h2>Stress and exercise both activate the body, in very different ways</h2>
+    <p class="intro">All numbers are participant-level: windows are averaged within each person first, and the
+      differences are paired within person, with bootstrap 95% CIs.</p>
+    <div class="grid-2">
+      <div class="card finding str"><div class="num">+5.0 bpm</div><p><b>Heart-rate response to the mental-stress task</b> (95% CI 2.2–7.8, same day, n = 34). HR then drops <i>below</i> the starting baseline during recovery, which suggests the baseline itself held anticipatory arousal.</p></div>
+      <div class="card finding str"><div class="num">−0.006 g</div><p><b>Wrist movement <i>decreases</i> during stress.</b> The physiological response happens with the body stiller than at rest, so it cannot be a movement artefact.</p></div>
+      <div class="card finding aer"><div class="num">+49 bpm</div><p><b>At the aerobic peak</b>, about 10× the stress response. EDA is ~11× its resting level, against ~1.6× under stress.</p></div>
+      <div class="card finding ana"><div class="num">~60 s</div><p><b>After a sprint, HR keeps climbing.</b> The cardiovascular response lags the mechanical effort, and valid HR from the wrist only returns about a minute after the sprint.</p></div>
+    </div>
+    <figure>
+      <img src="assets/fig/04_event_locked.png" alt="Event-locked responses to the stress task and to sprints" loading="lazy">
+      <figcaption><b>Event-locked responses</b> (mean ± 95% CI across participants). Top: the stress task raises HR and EDA with no change in movement. Bottom: a sprint is a movement burst, followed by lagging HR and a sustained EDA rise.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/fig/06_change_from_rest.png" alt="Change from seated rest for each signal and state" loading="lazy">
+      <figcaption><b>Change from seated rest</b> for every signal and state. Skin-temperature slope shows no reliable change anywhere. Exercise contrasts compare different days.</figcaption>
+    </figure>
+    <div class="grid-2">
+      <figure>
+        <img src="assets/fig/04_aerobic_stages.png" alt="Aerobic stage-by-stage profiles" loading="lazy">
+        <figcaption><b>Incremental cycling:</b> HR and movement rise steadily. EDA stays flat until ~95 rpm, then climbs steeply, consistent with a sweating threshold. Skin temperature does not rise.</figcaption>
+      </figure>
+      <figure>
+        <img src="assets/fig/04_individual_stress_responses.png" alt="Individual stress responses" loading="lazy">
+        <figcaption><b>Individual responses vary several-fold:</b> 25/34 participants raise HR and 29/36 raise EDA, and the two responses are unrelated within a person (ρ ≈ 0).</figcaption>
+      </figure>
+    </div>
+    <div class="grid-2">
+      <figure>
+        <img src="assets/fig/04_multimodal_profile.png" alt="Multimodal physiological profile heatmap" loading="lazy">
+        <figcaption><b>Multimodal profile.</b> No single signal separates all states; their combination does. A heatmap is used instead of a radar chart because these axes have no meaningful order or area.</figcaption>
+      </figure>
+      <figure>
+        <img src="assets/fig/06_icc.png" alt="Intraclass correlation by feature and state" loading="lazy">
+        <figcaption><b>Physiology is individual:</b> in rest, stress and aerobic states, 83–99% of HR and EDA window-to-window variance is <i>between</i> people. Absolute thresholds generalise poorly, and models must be validated on unseen people.</figcaption>
+      </figure>
+    </div>
+    <div class="callout"><b>Self-report vs physiology.</b> Within each person, blocks rated as more stressful also show higher HR (r<sub>rm</sub> = 0.40) and EDA (r<sub>rm</sub> = 0.18). The wearable tracks perceived stress, but only moderately. RMSSD fell by ~7 ms during the stress task (vagal withdrawal), but only 17–23 participants had enough clean beats, so this evidence is suggestive.</div>
+  </div>
+</section>
+
+<section id="ml">
+  <div class="wrap">
+    <div class="eyebrow">Machine learning, last</div>
+    <h2>Can the three states be told apart in someone the model has never seen?</h2>
+    <p class="intro">Classes: stress tasks, aerobic stages, and sprints plus their first 2 min of recovery. Validation:
+      <b>leave-one-subject-out</b>. Metrics: macro-F1 and balanced accuracy, with CIs from resampling participants.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Result</th><th class="n">macro-F1</th><th>What it means</th></tr></thead>
+        <tbody>
+          <tr><td>Random window split (leaky)</td><td class="n">0.83</td><td>Same people in train and test: the model recognises <i>individuals</i></td></tr>
+          <tr><td><b>Leave-one-subject-out, all signals</b></td><td class="n"><b>0.66</b> (0.61–0.71)</td><td>Honest estimate for a new person</td></tr>
+          <tr><td>Movement only</td><td class="n">0.58</td><td>Best single modality: seated vs pedalling</td></tr>
+          <tr><td>Physiology only (HR + EDA + temperature)</td><td class="n">0.50</td><td>Above chance (0.33), weaker than movement</td></tr>
+          <tr><td>Movement + "HR missing" flag</td><td class="n">0.64</td><td>Nearly all the gain: the PPG <i>failing</i> during sprints is itself a cue</td></tr>
+          <tr><td><b>Stress vs seated rest, physiology only</b></td><td class="n"><b>0.65</b> (0.60–0.70)</td><td>Where movement can't help, physiology (EDA first) does</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="grid-2">
+      <figure>
+        <img src="assets/fig/07_ablation.png" alt="Modality ablation" loading="lazy">
+        <figcaption><b>Combinations beat single signals.</b> Movement dominates the three-class problem. Skin temperature alone is at chance level.</figcaption>
+      </figure>
+      <figure>
+        <img src="assets/fig/07_confusion.png" alt="Confusion matrices" loading="lazy">
+        <figcaption><b>The hard part is aerobic vs anaerobic</b> (both pedalling). Stress is recognised in 83% of windows.</figcaption>
+      </figure>
+    </div>
+    <div class="callout"><b>The honest message.</b> This is not "AI detects stress and exercise with high accuracy". A wrist
+      wearable separates seated stress from cycling mostly by movement. It detects acute stress while sitting from
+      physiology with modest accuracy, and it struggles to tell two kinds of cycling apart. Feature importance is
+      reported, but never read as physiological causation.</div>
+  </div>
+</section>
+
+<section id="methods">
+  <div class="wrap">
+    <div class="eyebrow">Method</div>
+    <h2>Seven notebooks, one rule: physiology before modelling</h2>
+    <ol class="steps">
+      <li><b>Data understanding.</b> Checksums, sampling rates verified from headers, tag-to-protocol maps, a 25-item issue registry.</li>
+      <li><b>Signal quality.</b> Per-window rules for PPG/HR, EDA, temperature and ACC, calibrated on clean seated data.</li>
+      <li><b>Protocol segmentation.</b> Cadence fidelity checked with the accelerometer; analysis states comparable across protocol versions.</li>
+      <li><b>Exploratory physiology.</b> Event-locked responses, stage profiles, individual trajectories, multimodal profile.</li>
+      <li><b>Feature engineering.</b> 14 window features with a physiological rationale; univariate effects at participant level.</li>
+      <li><b>Statistics.</b> Paired effect sizes with bootstrap CIs, mixed models, ICCs, repeated-measures correlation, robustness checks.</li>
+      <li><b>Classification.</b> LOSO validation, a leakage demonstration, modality ablation, a missingness-shortcut test, permutation importance.</li>
+    </ol>
+  </div>
+</section>
+
+<section id="limits">
+  <div class="wrap">
+    <div class="eyebrow">Limitations</div>
+    <h2>What this dataset cannot tell us</h2>
+    <div class="grid-2">
+      <div class="card"><h3>Small, confounded sample</h3><p>36 young, healthy adults. Cohort is confounded with sex, age, training status and protocol version (v1: 18 men; v2: 17 women + 1 man).</p></div>
+      <div class="card"><h3>No reference measurements</h3><p>No ECG, power output, VO₂ or lactate. "Aerobic" and "anaerobic" are protocol labels, not verified metabolic states.</p></div>
+      <div class="card"><h3>Wrist PPG during exercise</h3><p>HR is unmeasurable during sprints and often corrupted while pedalling. HRV is only defensible while seated.</p></div>
+      <div class="card"><h3>Different days, short tasks</h3><p>The resting reference is on another day. The 30-s stress tasks are short relative to EDA and HRV dynamics.</p></div>
+    </div>
+    <p class="muted" style="margin-top:20px">Nothing here supports clinical inference or diagnosis.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><b>Wearable Exercise Physiology Analytics</b>, by Victor Gomez, physiotherapist and personal trainer working in
+      data science and human performance.</p>
+    <p>Data: Hongn A., Bosch F., Prado L. E., Ferrández J. M., Bonomini M. P. <i>Wearable Device Dataset from Induced
+      Stress and Structured Exercise Sessions</i> (v1.0.1). PhysioNet, <a href="https://doi.org/10.13026/he0v-tf17">doi:10.13026/he0v-tf17</a>, ODC-By.
+      Paper: <i>Scientific Data</i> 12 (2025), <a href="https://doi.org/10.1038/s41597-025-04845-9">doi:10.1038/s41597-025-04845-9</a>.</p>
+    <p><a href="https://github.com/victorgomezadapty/wearable-exercise-physiology">Source code &amp; notebooks</a> · MIT-licensed code</p>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var btn = document.getElementById("themeBtn");
+    var root = document.documentElement;
+    try { var saved = localStorage.getItem("theme"); if (saved) root.setAttribute("data-theme", saved); } catch (e) {}
+    btn.addEventListener("click", function () {
+      var dark = root.getAttribute("data-theme") === "dark" ||
+        (!root.getAttribute("data-theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
+      var next = dark ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      try { localStorage.setItem("theme", next); } catch (e) {}
+    });
+  })();
+</script>
+</body>
+</html>
