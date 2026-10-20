@@ -42,7 +42,16 @@ def find_root():
     env = os.environ.get("WEARABLE_DATA_ROOT")
     if env: return Path(env)
     hits = glob.glob("/kaggle/input/**/processed/windows.csv", recursive=True)
-    return Path(hits[0]).parent.parent
+    if hits:
+        return Path(hits[0]).parent.parent
+    # Fallback: folders uploaded as zip archives that were not auto-extracted
+    import zipfile
+    work = Path("/kaggle/working/wearable"); work.mkdir(parents=True, exist_ok=True)
+    for z in glob.glob("/kaggle/input/**/*.zip", recursive=True):
+        name = Path(z).stem
+        if name in ("processed", "code", "interim"):
+            zipfile.ZipFile(z).extractall(work / name)
+    return work
 ROOT = find_root()
 sys.path.insert(0, str(ROOT / "code"))
 PROC = ROOT / "processed"
