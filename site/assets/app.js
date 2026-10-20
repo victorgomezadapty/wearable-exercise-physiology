@@ -1,7 +1,9 @@
 /* Wearable Exercise Physiology — interactive charts and animation (D3 v7) */
 (function () {
   "use strict";
-  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const isStatic = /[?&]static/.test(location.search);   // ?static: no motion (screenshots, preference)
+  const reduce = isStatic || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (isStatic) document.documentElement.classList.add("no-motion");
   const DUR = reduce ? 0 : 900;
   const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
   const fmt = (v, k = 2) => (v == null || !isFinite(v) ? "–" : (+v).toFixed(k));
@@ -47,7 +49,8 @@
       return sys + dic;
     }
     function frame(ts) {
-      const W = svg.clientWidth || 1200, H = svg.clientHeight || 220;
+      const box = svg.getBoundingClientRect();
+      const W = Math.round(box.width) || 1200, H = Math.round(box.height) || 220;
       svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
       const t = reduce ? 0 : (ts - t0) / 1400;
       let d = "";

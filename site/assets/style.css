@@ -133,7 +133,8 @@ code { font-family: var(--mono); font-size: .9em; background: var(--surface-2); 
 .hero .wrap { position: relative; z-index: 1; }
 .pulse { position: absolute; inset: auto 0 0 0; height: 220px; z-index: 0; opacity: .55; pointer-events: none; }
 .pulse path { fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-@media (min-width: 900px) { .pulse { inset: 40px 0 auto 0; height: 300px; opacity: .35; } }
+@media (min-width: 900px) { .pulse { inset: 150px 0 auto 58%; width: 42%; height: 300px; opacity: .55; } }
+.no-motion .reveal { opacity: 1; transform: none; transition: none; }
 
 .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
 .reveal.in { opacity: 1; transform: none; }
