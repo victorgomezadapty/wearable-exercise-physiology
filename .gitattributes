@@ -1,0 +1,2 @@
+# Keep PhysioNet files byte-identical (their SHA-256 checksums must keep matching)
+data/raw/** -text
