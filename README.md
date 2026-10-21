@@ -98,8 +98,12 @@ python -m src.data.download
 ```bash
 python -m src.pipeline
 ```
-Then run notebooks `02` → `07` in order. Notebook `01` regenerates the Phase 1 inventory. `data/processed/` already
-contains the derived tables, so notebooks 04–07 run without the raw data.
+Then run notebooks `02` → `07` in order. Notebook `01` regenerates the Phase 1 inventory.
+
+**Without downloading the raw signals:** the repository includes the derived tables (`data/processed/`,
+`data/interim/`) and the small PhysioNet metadata files (`data/raw/*.csv|txt`), so notebooks **03–07** run as they
+are. Notebook 04 falls back to the saved event-locked traces. Notebooks 01 and 02 and `src.pipeline` read the raw
+signal files and need the download.
 
 ## Repository layout
 

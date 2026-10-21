@@ -89,9 +89,13 @@ nb.code('''
 ev_stress = seg[(seg.condition == "STRESS") & (seg.segment == "tmct")].assign(event="TMCT", onset_s=lambda d: d.start_s)
 ev_sprint = seg[(seg.condition == "ANAEROBIC") & seg.segment.str.startswith("sprint")].assign(event="Sprint", onset_s=lambda d: d.start_s)
 ev_stress = ev_stress[ev_stress.session_id != "f07"]  # PPG/TEMP covered; EDA kept below via separate run is unnecessary
-tr_stress = event_traces(ev_stress, w, pre_s=60, post_s=240)
-tr_sprint = event_traces(ev_sprint, w, pre_s=60, post_s=240)
-tr_stress.to_csv(PROCESSED / "event_traces_tmct.csv", index=False); tr_sprint.to_csv(PROCESSED / "event_traces_sprint.csv", index=False)
+if (ROOT / "data" / "raw" / "Wearable_Dataset").exists():      # recompute from the raw signals
+    tr_stress = event_traces(ev_stress, w, pre_s=60, post_s=240)
+    tr_sprint = event_traces(ev_sprint, w, pre_s=60, post_s=240)
+    tr_stress.to_csv(PROCESSED / "event_traces_tmct.csv", index=False); tr_sprint.to_csv(PROCESSED / "event_traces_sprint.csv", index=False)
+else:                                                          # no raw data: use the saved traces
+    tr_stress = pd.read_csv(PROCESSED / "event_traces_tmct.csv"); tr_sprint = pd.read_csv(PROCESSED / "event_traces_sprint.csv")
+    print("Raw data not found: using saved event traces from data/processed/")
 s_st, s_sp = summarise(tr_stress), summarise(tr_sprint)
 
 sig = [("HR", "Δ heart rate (bpm)"), ("EDA", "Δ EDA (µS)"), ("Movement", "Δ movement (g)"), ("TEMP", "Δ skin temp (°C)")]

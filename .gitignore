@@ -1,6 +1,15 @@
 # Raw PhysioNet data: re-downloadable with `python -m src.data.download`
 data/raw/*
 !data/raw/.gitkeep
+# Small PhysioNet metadata (ODC-By) needed by notebooks 03-07 without the raw signals
+!data/raw/subject-info.csv
+!data/raw/Stress_Level_v1.csv
+!data/raw/Stress_Level_v2.csv
+!data/raw/Data_Dictionary.csv
+!data/raw/data_constraints.txt
+!data/raw/README.txt
+!data/raw/LICENSE.txt
+!data/raw/SHA256SUMS.txt
 # Regenerable intermediate table (python -m src.pipeline)
 data/processed/windows_raw.csv
 
