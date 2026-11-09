@@ -31,3 +31,6 @@ Thumbs.db
 desktop.ini
 .vscode/
 .idea/
+
+# Build outputs (Kaggle dataset bundle, Kaggle notebooks)
+dist/

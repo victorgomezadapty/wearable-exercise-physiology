@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600&family=JetBrains+Mono&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=4">
+<link rel="stylesheet" href="assets/style.css?v=5">
 </head>
 <body>
 
@@ -36,6 +36,12 @@
       <li><a href="#limits">Limitations</a></li>
     </ul>
     <button class="theme-btn" id="themeBtn" aria-label="Toggle colour theme">◐ Theme</button>
+  </div>
+  <div class="tabbar">
+    <div class="wrap" role="navigation" aria-label="Analyses">
+      <a class="tab" href="./" aria-current="page">Group physiology</a>
+      <a class="tab" href="individual.html">Individual responses <span class="badge">new</span></a>
+    </div>
   </div>
 </nav>
 
@@ -209,6 +215,8 @@
           <button data-value="dHR" aria-pressed="true">Heart rate</button><button data-value="dEDA" aria-pressed="false">EDA</button></div>
         <div class="chart" id="chart-individual" aria-label="Individual stress responses"></div>
         <p class="chart-note" id="note-individual"></p>
+        <p class="chart-note">Who of these really responded, beyond their own measurement noise? →
+          <a href="individual.html#who">Individual responses</a></p>
       </div>
     </div>
 

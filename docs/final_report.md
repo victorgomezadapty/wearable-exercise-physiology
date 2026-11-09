@@ -65,6 +65,29 @@ reason to combine them.
 - **No resting baseline in any exercise session.** The seated reference comes from the stress day.
 - **25 data issues** catalogued, 15 of them not in the authors' constraint file (`src/data/issues.py`).
 
+## Individual responses (notebook 08)
+
+Group results describe the average person. A practitioner decides about one person, so notebook 08 applies the
+sports-science framework for individual decisions (typical error, smallest worthwhile change, true individual-response
+SD; Hopkins 2000, Atkinson & Batterham 2015, Swinton et al. 2018).
+
+- **People genuinely differ.** True individual-response SD for HR is **7.6 bpm** (95% CI 5.3–9.3) around the +5.0 bpm
+  mean. About one person in four has no true HR rise; about one in four rises by more than 10 bpm. EDA level and SCR rate
+  show the same pattern.
+- **One test cannot tell who.** HR typical error between two seated rests is **2.4 bpm**, as large as the smallest
+  worthwhile change (2.3 bpm). After one stress task, 9 of 34 participants are clear HR responders, 6 show no
+  meaningful response and **19 are unclear**. About **6 repeated tests** would be needed for HR (4 for EDA level, 14 for
+  SCR rate); with a conservative noise estimate, about 15.
+- **Different channels.** HR and EDA responses are unrelated (ρ = −0.06). Of 15 people with a clear response on either
+  signal, 6 respond only through the heart, 6 only through the sweat glands and 3 through both. Self-reported stress
+  changes similarly in every profile.
+- **External load ≠ internal load.** Only **14 of 30** aerobic participants have a usable final-stage HR (≥ 3 valid
+  windows, not lower than the moderate stages). In them, the same cadence protocol ended between **46% and 91% of
+  age-predicted HRmax** (median 74%), from very light to vigorous. Moderate stages averaged ≈ 47% HRmax.
+
+The findings are translated into a one-page decision table in the [practitioner guide](practitioner_guide.md)
+([Spanish version](guia_profesional.md)).
+
 ## What this project does differently
 
 Compared with the dataset's original technical validation (Hongn et al., 2025: XGBoost, 10-fold cross-validation over
@@ -83,6 +106,9 @@ IBI not used):
 5. **Participant-level statistics** with effect sizes, CIs, mixed models, ICC and self-report correlation, instead of
    window-level accuracy as the main result.
 6. **Physiological interpretation checked against expectations written down in advance** (`docs/physiological_interpretation.md`).
+7. **Individual-level inference.** Responder classification against each person's measurement noise, true
+   individual-response variability, the number of repeated tests needed, relative intensity with reliability flags, and
+   a practitioner guide that turns the results into decisions.
 
 ## Limitations
 

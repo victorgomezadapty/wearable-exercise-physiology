@@ -85,3 +85,20 @@ dominant frequency with the prescribed rpm (aerobic V1).
 | Baselines first (logistic regression, depth-4 tree), then random forest and gradient boosting | Complexity added only if it helps. It barely did |
 | Modality ablation and a **missingness-shortcut test** (HR-missing indicator alone / with movement) | To separate physiological information from movement and from sensor failure |
 | Permutation importance on held-out participants (GroupKFold) | Model-agnostic; read at the modality level because correlated features share credit. SHAP not used: with this level of feature redundancy and a dominant movement feature it would add little beyond permutation importance |
+
+## Phase 7: Individual responses (`08_individual_responses`, `src/models/individual.py`)
+
+| Decision | Reason |
+|---|---|
+| Response = TMCT − seated baseline, quality-masked participant means | The same contrast as notebook 06, so the mean of the individual responses equals the group effect (+5.0 bpm) |
+| **Typical error** from the second halves of the two seated rests of the stress session: SD(rest₁ − rest₂)/√2, pooled | Same day, posture and duration class, no stressor in between. The baseline is not used for noise because it holds anticipatory arousal |
+| Conservative TE (baseline vs first recovery) reported as sensitivity | Upper bound on the noise; it changes counts, not conclusions |
+| **SWC** = 0.2 × between-person SD at seated rest | Hopkins' convention. There is no established clinical threshold for stress reactivity |
+| 90% interval = response ± 1.645 × √2 × TE; categories: clear (interval > +SWC), none (interval < +SWC), unclear | Standard practice for individual decisions in sports science (Swinton et al. 2018). Both blocks carry error |
+| **True individual-response SD** = √(SD_response² − SD_rest-diff²), bootstrap CI over participants | Separates genuine between-person differences from measurement noise (Atkinson & Batterham 2015) |
+| Repeats needed = ⌈(1.645 × √2 × TE / SWC)²⌉ | Number of averaged tests until the interval half-width is below the SWC |
+| RMSSD not classified individually | Only 17–23 participants have enough clean beats, and HRV needs longer clean segments than a single task block |
+| **Relative intensity** = HR / (208 − 0.7 × age) (Tanaka 2001), ACSM categories (Garber 2011) | %HRR was not used: the only seated resting HR is on another day and holds anticipatory arousal. The protocol prescribes cadence, not intensity. Age-predicted HRmax has an individual error of ≈ ±10 bpm |
+| Reliability flags for the final stage: ≥ 3 valid windows and HR not below the moderate stages; used to label, never to exclude | A final-stage HR below the moderate stages points to a measurement problem in an incremental test. Consistent with the Phase 2 rule that plausibility is a sensitivity check only |
+| A "close to cadence" flag was tested and **dropped** | 41% of valid moderate-stage windows fall within 8 bpm of some cadence multiple by chance, so the flag is not specific |
+| No comparison by training status | "Physically active" is confounded with cohort and sex |

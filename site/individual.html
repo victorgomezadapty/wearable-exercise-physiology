@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Individual Responses · Wearable Physiology</title>
+<meta name="description" content="Who really responded to a stress task, beyond their own measurement noise, and how hard did each person actually work? Sports-science statistics for individual decisions, applied to wrist-wearable data.">
+<meta property="og:title" content="Individual Responses · Wearable Exercise Physiology">
+<meta property="og:description" content="The average describes almost nobody: typical error, smallest worthwhile change and per-person profile cards from a wrist wearable.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://victorgomezadapty.github.io/wearable-exercise-physiology/individual.html">
+<meta property="og:image" content="https://victorgomezadapty.github.io/wearable-exercise-physiology/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://victorgomezadapty.github.io/wearable-exercise-physiology/individual.html">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M2 17h7l3-8 5 15 3-9 2 2h8' fill='none' stroke='%231f6feb' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600&family=JetBrains+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css?v=5">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap">
+    <a class="brand" href="./">Wearable Physiology <span>· E4</span></a>
+    <ul>
+      <li><a href="#who">Who responded</a></li>
+      <li><a href="#repeats">Repeats</a></li>
+      <li><a href="#channels">Channels</a></li>
+      <li><a href="#intensity">Intensity</a></li>
+      <li><a href="#cards">Profile cards</a></li>
+      <li><a href="#guide">Practitioner guide</a></li>
+    </ul>
+    <button class="theme-btn" id="themeBtn" aria-label="Toggle colour theme">◐ Theme</button>
+  </div>
+  <div class="tabbar">
+    <div class="wrap" role="navigation" aria-label="Analyses">
+      <a class="tab" href="./">Group physiology</a>
+      <a class="tab" href="individual.html" aria-current="page">Individual responses <span class="badge">new</span></a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div class="eyebrow">Individual responses · Sports-science statistics · Practitioner view</div>
+    <h1>The average describes almost nobody.</h1>
+    <p class="lede">The group result says a mental-stress task raises heart rate by +5 bpm. A physiotherapist or coach
+      decides about <em>one</em> person. So this tab asks a practitioner's questions: did this person respond beyond
+      their own measurement noise, through which channel, how many tests would you need to know, and how hard did each
+      person actually work?</p>
+    <div class="cta">
+      <a class="btn primary" href="#cards">Explore a participant →</a>
+      <a class="btn" href="https://github.com/victorgomezadapty/wearable-exercise-physiology/blob/main/notebooks/08_individual_responses.ipynb">Notebook 08</a>
+      <a class="btn" href="https://github.com/victorgomezadapty/wearable-exercise-physiology/blob/main/docs/guia_profesional.md">Guía en español</a>
+    </div>
+    <div class="stats">
+      <div class="stat"><b>7.6 bpm</b><span>true between-person SD of the HR stress response, around a mean of +5 bpm</span></div>
+      <div class="stat"><b>1 in 4</b><span>people who can be classified clearly after one stress test</span></div>
+      <div class="stat"><b>~6</b><span>repeated tests needed before HR noise drops below the smallest worthwhile change</span></div>
+      <div class="stat"><b>46–91%</b><span>of predicted HRmax at the end of the <em>same</em> cycling protocol</span></div>
+    </div>
+  </div>
+</header>
+
+<section id="framework">
+  <div class="wrap">
+    <h2>From group effects to individual decisions</h2>
+    <p class="intro">Sports science has a standard toolkit for judging one person (Hopkins 2000; Atkinson &amp; Batterham
+      2015; Swinton et al. 2018). Everything below is computed per participant on the stress day, from quality-checked
+      30-s windows, using the same TMCT − seated-baseline contrast as the group analysis.</p>
+    <div class="grid-3">
+      <div class="card"><h3>Typical error</h3><div class="num">2.4 bpm</div>
+        <p>How much one person's heart rate moves between two comparable seated rests on the same day, with nothing
+          happening. This is the noise floor for any individual judgement.</p></div>
+      <div class="card"><h3>Smallest worthwhile change</h3><div class="num">2.3 bpm</div>
+        <p>0.2 × the between-person SD at rest. <b>The noise is as large as the smallest change worth detecting.</b>
+          That is the core difficulty of monitoring individuals.</p></div>
+      <div class="card"><h3>True individual differences</h3><div class="num">SD 7.6 bpm</div>
+        <p>The spread of responses left after removing measurement noise (95% CI 5.3–9.3). People genuinely differ: about
+          one in four has no true HR rise, and about one in four rises by more than 10 bpm.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="who">
+  <div class="wrap">
+    <h2>Who really responded?</h2>
+    <p class="intro">Each row is one person: stress-task response (dot) with a 90% interval (line) built from the typical
+      error. <b>Clear response</b> means the whole interval is above the smallest worthwhile change (dashed line). <b>No
+      meaningful response</b> means it is entirely below. Everything else is <b>unclear</b>.</p>
+    <div class="chart-card">
+      <div class="chart-head"><div><h3>Individual stress responses, one test each</h3>
+        <p>Hover a row for the numbers.</p></div>
+        <div class="seg" data-controls="chart-forest">
+          <button data-value="hr_mean" aria-pressed="true">Heart rate</button><button data-value="eda_log" aria-pressed="false">EDA level</button><button data-value="eda_scr_rate" aria-pressed="false">SCR rate</button></div></div>
+      <div class="legend-inline"><span><i style="background:var(--stress)"></i>clear response</span><span><i style="background:var(--unclear)"></i>unclear</span><span><i style="background:var(--ink-2)"></i>no meaningful response</span></div>
+      <div class="chart" id="chart-forest" aria-label="Individual responses with 90% intervals"></div>
+      <p class="chart-note" id="note-forest"></p>
+    </div>
+  </div>
+</section>
+
+<section id="repeats">
+  <div class="wrap">
+    <h2>How many tests would you need?</h2>
+    <p class="intro">Averaging k repeated tests shrinks the interval by √k. The curves show when the 90% half-width falls
+      below the smallest worthwhile change, i.e. when one person's response can be judged with confidence.</p>
+    <div class="chart-card">
+      <div class="chart-head"><div><h3>Interval half-width relative to the smallest worthwhile change</h3>
+        <p>Below the line, measurement noise is smaller than the change worth detecting.</p></div>
+        <div class="seg" data-controls="chart-repeats">
+          <button data-value="te" aria-pressed="true">Typical error (rest vs rest)</button><button data-value="te_conservative" aria-pressed="false">Conservative (baseline vs rest)</button></div></div>
+      <div class="chart" id="chart-repeats" aria-label="Repeats needed per signal"></div>
+    </div>
+    <div class="callout"><b>Practical translation.</b> To call a client a "high stress reactor", measure them on several
+      occasions, or with longer stress exposures, and compare against their own baseline, never against a population
+      threshold. One short test is a hypothesis, not a label.</div>
+  </div>
+</section>
+
+<section id="channels">
+  <div class="wrap">
+    <h2>Same stressor, different channels</h2>
+    <p class="intro">Each point is a person. Heart-rate and skin-conductance responses are unrelated across people, so a
+      monitor that watches only one channel misses about half of the people with a clear response.</p>
+    <div class="chart-card">
+      <div class="chart-head"><div><h3>HR response vs EDA response</h3>
+        <p>Dashed lines = smallest worthwhile change on each axis. Click a point to open that person's card.</p></div></div>
+      <div class="legend-inline" id="legend-channels"></div>
+      <div class="chart" id="chart-channels" aria-label="Scatter of HR and EDA responses"></div>
+      <p class="chart-note" id="note-channels"></p>
+    </div>
+  </div>
+</section>
+
+<section id="intensity">
+  <div class="wrap">
+    <h2>External load is not internal load</h2>
+    <p class="intro">The cycling protocol prescribes cadences, not intensities. Expressed as a percentage of each person's
+      age-predicted maximum heart rate (208 − 0.7 × age), the same protocol meant very different things for different
+      people, when the wrist could measure it at all.</p>
+    <div class="chart-card">
+      <div class="chart-head"><div><h3>Relative intensity per participant</h3>
+        <p>Bands = ACSM categories. A final-stage value is <i>reliable</i> with ≥ 3 valid 30-s windows and HR not below the
+          moderate stages; unreliable values are shown, not removed.</p></div></div>
+      <div class="legend-inline"><span><i style="background:var(--unclear)"></i>moderate stages</span><span><i style="background:var(--aerobic)"></i>final stage, reliable</span><span><i class="ring"></i>final stage, unreliable</span></div>
+      <div class="chart" id="chart-intensity" aria-label="Percent of predicted HRmax per participant"></div>
+      <p class="chart-note" id="note-intensity"></p>
+    </div>
+    <div class="grid-2">
+      <div class="card finding aer"><h3>Only 14 of 30</h3><p>aerobic participants have a final-stage wrist HR a
+        practitioner could use. For the rest, the PPG failed or produced values below the easier stages.</p></div>
+      <div class="card finding warn"><h3>Age-predicted HRmax is rough</h3><p>Individual error is about ±10 bpm (≈ ±5
+        percentage points). When a decision depends on it, use a measured maximum or RPE.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="cards">
+  <div class="wrap">
+    <h2>Profile cards</h2>
+    <p class="intro">Everything above, for one person, written the way a practitioner would read it. The verdicts describe
+      one session, not a trait.</p>
+    <div class="chart-card">
+      <div class="picker">
+        <label for="pick" class="muted">Participant</label>
+        <select id="pick" aria-label="Choose a participant"></select>
+        <div class="seg" id="examples" aria-label="Example profiles">
+          <button data-id="S16" aria-pressed="false">Heart only</button><button data-id="S03" aria-pressed="false">Sweat only</button><button data-id="S04" aria-pressed="false">Both</button></div>
+      </div>
+      <div id="pcard"></div>
+    </div>
+  </div>
+</section>
+
+<section id="guide">
+  <div class="wrap">
+    <h2>Practitioner guide</h2>
+    <p class="intro">What a wrist wearable can and cannot tell you about your client, condensed from all the analyses in
+      this project. Full guide: <a href="https://github.com/victorgomezadapty/wearable-exercise-physiology/blob/main/docs/practitioner_guide.md">English</a> ·
+      <a href="https://github.com/victorgomezadapty/wearable-exercise-physiology/blob/main/docs/guia_profesional.md">Español</a>.</p>
+    <div class="table-scroll">
+      <table class="guide">
+        <thead><tr><th>Situation</th><th>Trust it?</th><th>Evidence</th><th>What to do</th></tr></thead>
+        <tbody>
+          <tr><td>Heart rate, sitting still</td><td>Mostly</td><td>Valid in ~60–70% of 30-s windows</td><td>Use it; check for gaps</td></tr>
+          <tr><td>Heart rate, steady cycling</td><td>Often not</td><td>Valid in 43% of windows; final stage usable in 14 of 30 people</td><td>Chest strap for intensity decisions; cross-check with RPE</td></tr>
+          <tr><td>Heart rate, sprints</td><td>No</td><td>Valid in 3% of sprint windows</td><td>Chest strap, or judge recovery once still</td></tr>
+          <tr><td>HRV (RMSSD)</td><td>Seated only</td><td>25–35 ms at ~130 bpm during exercise is artefact</td><td>Measure seated or lying, still</td></tr>
+          <tr><td>Skin conductance (EDA) as "stress"</td><td>Context-dependent</td><td>Stress ×1.6; peak exercise ×11 (sweating)</td><td>Interpret at rest, against the person's own baseline</td></tr>
+          <tr><td>Skin temperature</td><td>No</td><td>No reliable change in any condition</td><td>Ignore for decisions</td></tr>
+          <tr><td>"Is my client a stress responder?"</td><td>Not from one test</td><td>Noise ≈ smallest worthwhile change; 19 of 34 unclear on HR</td><td>Repeat (~6× for HR), compare with own baseline</td></tr>
+          <tr><td>Which signal to monitor?</td><td>More than one</td><td>HR and EDA responders are different people (ρ ≈ −0.06)</td><td>Watch both; ask about perceived stress too</td></tr>
+          <tr><td>Did the session hit the target?</td><td>Check per person</td><td>Same protocol: 46–91% of predicted HRmax</td><td>Prescribe by internal load, not external load alone</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted" style="margin-top:18px">Healthy adults aged 18–31, one device (Empatica E4), single sessions, no ECG
+      or VO₂ reference. Not applicable to clinical populations, heart-rate-altering medication or diagnosis.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><b>Wearable Exercise Physiology Analytics</b>, by Victor Gomez, physiotherapist and personal trainer working in
+      data science and human performance.</p>
+    <p>Data: Hongn A., Bosch F., Prado L. E., Ferrández J. M., Bonomini M. P. <i>Wearable Device Dataset from Induced
+      Stress and Structured Exercise Sessions</i> (v1.0.1). PhysioNet, <a href="https://doi.org/10.13026/he0v-tf17">doi:10.13026/he0v-tf17</a>, ODC-By.
+      Methods: Hopkins (2000) <i>Sports Med</i> 30:1–15 · Atkinson &amp; Batterham (2015) <i>Exp Physiol</i> 100:577–588 ·
+      Swinton et al. (2018) <i>Front Nutr</i> 5:41 · Tanaka et al. (2001) <i>JACC</i> 37:153–156 · Garber et al. (2011) <i>MSSE</i> 43:1334–1359.</p>
+    <p><a href="./">Group physiology</a> · <a href="https://github.com/victorgomezadapty/wearable-exercise-physiology">Source code &amp; notebooks</a> · MIT-licensed code</p>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="assets/individual.js?v=1"></script>
+</body>
+</html>

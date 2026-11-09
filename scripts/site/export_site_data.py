@@ -1,9 +1,11 @@
 """Export the data behind the interactive charts of the project site.
 
-    python scripts/site/export_site_data.py
+    python scripts/site/export_site_data.py                 # both files
+    python scripts/site/export_site_data.py --individual    # individual_data.json only
 
-Reads data/processed (outputs of notebooks 02-07) and writes
-site/assets/data/site_data.json. Confusion matrices need per-window LOSO
+Reads data/processed (outputs of notebooks 02-08) and writes
+site/assets/data/site_data.json (group results, index.html) and
+site/assets/data/individual_data.json (individual profiles, individual.html). Confusion matrices need per-window LOSO
 predictions, which are recomputed here (random forest, same settings as
 notebook 07) and cached in data/processed/clf_loso_predictions.csv.
 """
@@ -29,6 +31,43 @@ from src.signals.quality import masked_features
 
 PROC = ROOT / "data" / "processed"
 OUT = ROOT / "site" / "assets" / "data" / "site_data.json"
+OUT_IND = ROOT / "site" / "assets" / "data" / "individual_data.json"
+
+IND_COLS = ["cohort", "sex", "age", "active", "profile",
+            "hr_mean_response", "hr_mean_ci90_low", "hr_mean_ci90_high", "hr_mean_category",
+            "eda_log_response", "eda_log_ci90_low", "eda_log_ci90_high", "eda_log_category", "eda_ratio",
+            "eda_scr_rate_response", "eda_scr_rate_ci90_low", "eda_scr_rate_ci90_high", "eda_scr_rate_category",
+            "selfreport_change", "movement_change", "hr_valid_stress", "hr_valid_aerobic", "hr_valid_anaerobic",
+            "hr_moderate", "pct_hrmax_moderate", "hr_peak", "pct_hrmax_peak", "acsm_peak", "hrmax_pred",
+            "peak_stage", "peak_valid_windows", "peak_enough_data", "peak_above_moderate", "peak_reliable"]
+
+
+def export_individual():
+    """Individual profiles from notebook 08 (data/processed/individual_*.csv)."""
+    prof = pd.read_csv(PROC / "individual_profiles.csv", index_col="subject_id")
+    noise = pd.read_csv(PROC / "individual_noise.csv", index_col="signal")
+    rows = []
+    for sid, r in prof[IND_COLS].iterrows():
+        rec = {"id": sid}
+        for c, v in r.items():
+            if isinstance(v, (bool, np.bool_)):
+                rec[c] = bool(v)
+            elif isinstance(v, (int, float, np.integer, np.floating)):
+                rec[c] = r_(v)
+            else:
+                rec[c] = None if pd.isna(v) else str(v)
+        rows.append(rec)
+    keep = ["label", "te", "te_low", "te_high", "te_conservative", "swc", "mean_response", "repeats_needed",
+            "sd_response", "sd_noise", "sd_ir", "sd_ir_low", "sd_ir_high"]
+    data = {"noise": {s: {k: (r_(v, 4) if not isinstance(v, str) else v) for k, v in noise.loc[s, keep].items()}
+                      for s in noise.index},
+            "profiles": rows}
+    OUT_IND.write_text(json.dumps(data, separators=(",", ":"), allow_nan=False, ensure_ascii=False), encoding="utf8")
+    print(f"wrote {OUT_IND} ({OUT_IND.stat().st_size / 1024:.0f} KB)")
+
+
+def r_(x, k=3):
+    return None if x is None or not np.isfinite(float(x)) else round(float(x), k)
 
 
 def r(x, k=3):
@@ -118,7 +157,11 @@ def main():
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(data, separators=(",", ":"), allow_nan=False), encoding="utf8")
     print(f"wrote {OUT} ({OUT.stat().st_size / 1024:.0f} KB)")
+    export_individual()
 
 
 if __name__ == "__main__":
-    main()
+    if "--individual" in sys.argv:
+        export_individual()
+    else:
+        main()

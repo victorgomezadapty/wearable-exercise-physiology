@@ -6,7 +6,8 @@ wearable (Empatica E4).**
 🌐 **Project page:** https://victorgomezadapty.github.io/wearable-exercise-physiology/ ·
 📓 **Kaggle notebook:** https://www.kaggle.com/code/vctorandrsgmezlpez/wearable-physiology-stress-vs-exercise ·
 🗂️ **Kaggle dataset:** https://www.kaggle.com/datasets/vctorandrsgmezlpez/wearable-stress-exercise-physiology ·
-📄 **Final report:** [docs/final_report.md](docs/final_report.md)
+📄 **Final report:** [docs/final_report.md](docs/final_report.md) ·
+🩺 **Practitioner guide:** [English](docs/practitioner_guide.md) · [Español](docs/guia_profesional.md)
 
 This project connects exercise physiology, wearable technology and data science. The principle: **understand the
 signals first**, process each one appropriately, analyse people as the unit of inference, and only then ask what
@@ -39,6 +40,10 @@ machine learning can add, evaluated on people it has never seen.
 5. **Combinations beat single signals** (0.66 vs 0.58 for movement alone). But in the three-class problem most of the
    gain is **movement plus a sensor-failure shortcut** (the PPG fails during sprints). Where movement can't help,
    **stress vs seated rest, physiology alone reaches 0.65**, with EDA the strongest single signal.
+6. **The average describes almost nobody.** True individual differences in the stress response are large (HR: SD
+   **7.6 bpm** around a mean of +5 bpm), but measurement noise is as large as the smallest worthwhile change, so **one
+   test can classify only ~1 in 4 people** (~6 repeats would be needed for HR). Heart and sweat responders are different
+   people, and the same cycling protocol ended at **46–91% of predicted HRmax** in the people who could be measured.
 
 Not "AI detects stress and exercise with high accuracy", but an honest account of what a wrist wearable can and
 cannot see.
@@ -58,6 +63,7 @@ people?*, and changes the method at every step:
 | **Movement vs physiology** | All features pooled | **Modality ablation**, a **stress-vs-seated-rest** test where movement cannot help (physiology alone 0.65), and discovery of a **sensor-failure shortcut** (PPG failure during sprints) |
 | **Unit of analysis** | Segments/windows as independent samples | **Participants**: paired effects with bootstrap CIs, mixed models, ICC, repeated-measures correlation with self-report |
 | **HRV & temperature** | IBI not used; temperature not analysed | HRV feasibility quantified and restricted to seated segments; temperature analysed (least informative signal) |
+| **Individuals** | Group results only | **Individual-response framework** from sports science: typical error, smallest worthwhile change, true individual-response SD, responder classification with 90% intervals, repeats needed, relative intensity (%HRmax) with reliability flags, per-person profile cards, and a practitioner guide |
 | **Goal** | Maximise accuracy | **Physiology first**: expectations written down before results, then checked (sweating threshold, lagging HR after sprints, stillness under stress, individuality) |
 
 The accuracy figures are not directly comparable (different class definitions and metrics). The leakage
@@ -82,10 +88,12 @@ anaerobic n = 31; 30 participants completed all three.
 | 05 | [Feature engineering](notebooks/05_feature_engineering.ipynb) | 14 window features, univariate participant-level effects, redundancy |
 | 06 | [Statistical analysis](notebooks/06_statistical_analysis.ipynb) | paired effects + bootstrap CIs, mixed models, ICC, self-report correlation, robustness |
 | 07 | [Classification](notebooks/07_classification.ipynb) | LOSO validation, leakage demo, modality ablation, shortcut test, permutation importance |
+| 08 | [Individual responses](notebooks/08_individual_responses.ipynb) | typical error and SWC, true individual-response SD, responder classification, repeats needed, response channels, relative intensity, profile cards |
 
 Documentation: [data dictionary](docs/data_dictionary.md) · [protocol summary](docs/protocol_summary.md) ·
 [methodology & decisions](docs/methodology.md) · [physiological interpretation](docs/physiological_interpretation.md) ·
-[Phase 1 report](docs/phase1_report.md) · [final report](docs/final_report.md)
+[Phase 1 report](docs/phase1_report.md) · [final report](docs/final_report.md) ·
+[practitioner guide](docs/practitioner_guide.md) · [guía para profesionales](docs/guia_profesional.md)
 
 ## Reproduce
 
@@ -98,10 +106,10 @@ python -m src.data.download
 ```bash
 python -m src.pipeline
 ```
-Then run notebooks `02` → `07` in order. Notebook `01` regenerates the Phase 1 inventory.
+Then run notebooks `02` → `08` in order. Notebook `01` regenerates the Phase 1 inventory.
 
 **Without downloading the raw signals:** the repository includes the derived tables (`data/processed/`,
-`data/interim/`) and the small PhysioNet metadata files (`data/raw/*.csv|txt`), so notebooks **03–07** run as they
+`data/interim/`) and the small PhysioNet metadata files (`data/raw/*.csv|txt`), so notebooks **03–08** run as they
 are. Notebook 04 falls back to the saved event-locked traces. Notebooks 01 and 02 and `src.pipeline` read the raw
 signal files and need the download.
 
@@ -109,15 +117,15 @@ signal files and need the download.
 
 ```
 data/        raw/ (PhysioNet, not committed) · interim/ (inventories, segments, issues) · processed/ (feature tables, results)
-notebooks/   01–07
+notebooks/   01–08
 src/
   data/      empatica.py · inventory.py · protocol.py · issues.py · repairs.py · download.py
   signals/   processing.py (per-signal processing) · quality.py (window quality rules)
   features/  windows.py · profiles.py (event-locked responses)
-  models/    stats.py (participant-level statistics) · classify.py (LOSO classification)
+  models/    stats.py (participant-level statistics) · classify.py (LOSO classification) · individual.py (individual responses)
   visualization/plots.py
   pipeline.py
-scripts/notebook_builders/   code that generates notebooks 02–07
+scripts/notebook_builders/   code that generates notebooks 02–08
 site/        project web page (GitHub Pages)
 docs/        reports and documentation
 reports/figures/
