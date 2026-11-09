@@ -3,8 +3,8 @@
 **Physiological responses to aerobic exercise, anaerobic sprints and acute psychological stress, measured with a wrist
 wearable (Empatica E4).**
 
-🌐 **Project page:** https://victorgomezadapty.github.io/wearable-exercise-physiology/ ·
-📓 **Kaggle notebook:** https://www.kaggle.com/code/vctorandrsgmezlpez/wearable-physiology-stress-vs-exercise ·
+🌐 **Project page:** https://victorgomezadapty.github.io/wearable-exercise-physiology/ ([individual responses tab](https://victorgomezadapty.github.io/wearable-exercise-physiology/individual.html)) ·
+📓 **Kaggle notebooks:** [group physiology](https://www.kaggle.com/code/vctorandrsgmezlpez/wearable-physiology-stress-vs-exercise) · [individual responses](https://www.kaggle.com/code/vctorandrsgmezlpez/who-really-responded-individual-stress-responses) ·
 🗂️ **Kaggle dataset:** https://www.kaggle.com/datasets/vctorandrsgmezlpez/wearable-stress-exercise-physiology ·
 📄 **Final report:** [docs/final_report.md](docs/final_report.md) ·
 🩺 **Practitioner guide:** [English](docs/practitioner_guide.md) · [Español](docs/guia_profesional.md)
